@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState, useEffect } from "react";
 
 const ContactForm = (props) => {
@@ -5,10 +6,17 @@ const ContactForm = (props) => {
         name: "",
         email: "",
         number: "",
-        address: "",
+        city: "",
     };
 
     const [val, setVal] = useState(initialVal);
+
+    useEffect(() => {
+        // Empty string
+        !props.currentId
+            ? setVal({ ...initialVal })
+            : setVal({ ...props.contacts[props.currentId] });
+    }, [props.currentId, props.contacts]);
 
     function handleChange(e) {
         const { name, value } = e.target;
@@ -42,15 +50,15 @@ const ContactForm = (props) => {
                 <div className="form-group input-group col-md-6">
                     <div className="input-group-prepend">
                         <div className="input-group-text">
-                            <i className="fas fa-envelope"></i>
+                            <i className="fas fa-map-marker-alt"></i>
                         </div>
                     </div>
                     <input
                         className="form-control"
-                        name="email"
-                        value={val.email}
-                        placeholder="Enter email"
-                        type="email"
+                        name="city"
+                        value={val.city}
+                        placeholder="Enter City"
+                        type="text"
                         onChange={handleChange}
                         required
                     />
@@ -72,18 +80,25 @@ const ContactForm = (props) => {
                     />
                 </div>
             </div>
-            <div className="form-group">
-                <textarea
+
+            <div className="form-group input-group">
+                <div className="input-group-prepend">
+                    <div className="input-group-text">
+                        <i className="fas fa-envelope"></i>
+                    </div>
+                </div>
+                <input
                     className="form-control"
-                    name="address"
-                    value={val.address}
-                    placeholder="Enter Address"
+                    name="email"
+                    value={val.email}
+                    placeholder="Enter Email"
+                    type="email"
                     onChange={handleChange}
                     required
                 />
             </div>
             <button className="btn btn-outline-success btn-block">
-                Submit
+                {props.currentId ? "Update" : "Submit"}
             </button>
         </form>
     );
